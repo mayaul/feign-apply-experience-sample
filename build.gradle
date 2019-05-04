@@ -1,0 +1,49 @@
+plugins {
+    id 'org.springframework.boot' version '2.0.8.RELEASE'
+    id 'java'
+}
+
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'groovy'
+
+jar {
+    baseName = 'feign'
+    version = '0.1.0'
+}
+
+
+ext {
+
+    // https://spring.io/projects/spring-cloud 의 Release Trains 부분을 보세요.
+    springCloudVersion = 'Finchley.RELEASE'
+}
+
+repositories {
+    jcenter()
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+dependencies {
+    compile("org.projectlombok:lombok:1.18.0")
+    compile("org.springframework.cloud:spring-cloud-starter-openfeign")
+    compile("org.springframework.boot:spring-boot-starter-web")
+    compile("commons-io:commons-io:2.6")
+
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile("org.spockframework:spock-core:1.1-groovy-2.4")
+    testCompile("org.spockframework:spock-spring:1.1-groovy-2.4")
+}
+
+configurations {
+    all*.exclude group: 'commons-logging', module: 'commons-logging' // replaced with jcl-over-slf4j
+    all*.exclude group: 'log4j', module: 'log4j' // replaced with log4j-over-slf4j
+
+    all*.exclude module: 'hsqldb'
+    all*.exclude module: 'slf4j-log4j12'
+}
